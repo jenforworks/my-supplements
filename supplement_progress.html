@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Progress">
+<title>Supplement Progress</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Sarabun',sans-serif;background:#f8f7f4;color:#1a1a18;padding-bottom:2rem;}
+.header{background:#fff;border-bottom:1px solid #e8e6e0;padding:1.25rem;position:sticky;top:0;z-index:10;}
+.header-title{font-size:20px;font-weight:600;letter-spacing:-0.3px;margin-bottom:2px;}
+.header-sub{font-size:12px;color:#888780;font-weight:300;}
+.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:1rem;background:#fff;border-bottom:1px solid #e8e6e0;}
+.stat{background:#f8f7f4;border-radius:10px;padding:0.75rem;text-align:center;}
+.stat-num{font-size:22px;font-weight:500;}
+.stat-label{font-size:10px;color:#888780;margin-top:2px;font-weight:300;}
+.legend{display:flex;flex-wrap:wrap;gap:10px;padding:0.875rem 1rem;background:#fff;border-bottom:1px solid #e8e6e0;}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:#5f5e5a;font-weight:300;}
+.leg-dot{width:8px;height:8px;border-radius:50%;}
+.section{padding:0 1rem;margin-top:1.25rem;}
+.section-label{font-size:11px;font-weight:500;color:#888780;letter-spacing:0.04em;margin-bottom:8px;}
+.card{background:#fff;border-radius:14px;padding:0.875rem 1rem;margin-bottom:8px;border:1px solid #e8e6e0;}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px;gap:8px;}
+.card-name{font-size:13px;font-weight:500;color:#1a1a18;line-height:1.3;}
+.badge{font-size:10px;padding:2px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0;}
+.badge-done{background:#e1f5ee;color:#085041;}
+.badge-going{background:#e6f1fb;color:#0c447c;}
+.badge-soon{background:#f1efe8;color:#5f5e5a;}
+.progress-labels{display:flex;justify-content:space-between;font-size:10px;color:#888780;margin-bottom:4px;font-weight:300;}
+.bar-track{height:8px;background:#f1efe8;border-radius:4px;overflow:hidden;position:relative;margin-bottom:2px;}
+.bar-fill{height:100%;border-radius:4px;}
+.bar-target-wrap{position:relative;height:4px;}
+.bar-target{position:absolute;top:-10px;width:2px;height:14px;border-radius:1px;opacity:0.4;}
+.card-note{font-size:11px;color:#888780;margin-top:5px;font-weight:300;line-height:1.6;}
+.milestone-row{display:flex;align-items:center;gap:6px;margin-top:5px;}
+.m-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.m-text{font-size:11px;font-weight:300;line-height:1.4;}
+.cat-pill{font-size:10px;padding:2px 8px;border-radius:10px;display:inline-flex;align-items:center;gap:4px;margin-bottom:5px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title">Supplement Progress</div>
+  <div class="header-sub" id="header-sub">กำลังคำนวณ...</div>
+</div>
+
+<div class="stat-row">
+  <div class="stat">
+    <div class="stat-num" id="stat-days" style="color:#1D9E75;">—</div>
+    <div class="stat-label">วันที่กินแล้ว</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" id="stat-weeks" style="color:#378ADD;">—</div>
+    <div class="stat-label">สัปดาห์</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" id="stat-pct" style="color:#7F77DD;">—</div>
+    <div class="stat-label">ของ 6 เดือน</div>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="leg"><div class="leg-dot" style="background:#1D9E75;"></div>Fat-soluble</div>
+  <div class="leg"><div class="leg-dot" style="background:#378ADD;"></div>Water-soluble</div>
+  <div class="leg"><div class="leg-dot" style="background:#BA7517;"></div>Mineral</div>
+  <div class="leg"><div class="leg-dot" style="background:#3B6D11;"></div>Gut</div>
+  <div class="leg"><div class="leg-dot" style="background:#7F77DD;"></div>B Complex</div>
+</div>
+
+<div id="content"></div>
+
+<script>
+const START = new Date('2026-03-22')
+const TOTAL_WEEKS = 26
+
+const CAT = {
+  fat:     {color:'#1D9E75', bg:'#e1f5ee', text:'#085041', label:'Fat-soluble'},
+  water:   {color:'#378ADD', bg:'#e6f1fb', text:'#0c447c', label:'Water-soluble'},
+  mineral: {color:'#BA7517', bg:'#faeeda', text:'#633806', label:'Mineral'},
+  gut:     {color:'#3B6D11', bg:'#eaf3de', text:'#27500a', label:'Gut'},
+  bvit:    {color:'#7F77DD', bg:'#eeedfe', text:'#3c3489', label:'B Complex'},
+}
+
+const supplements = [
+  { name:'Magnesium Glycinate', cat:'mineral', group:'เห็นผลเร็ว', targetWeeks:2,
+    note:'นอนหลับลึกขึ้น กล้ามเนื้อไม่ล้า',
+    milestones:[{w:1,text:'เริ่มนอนหลับดีขึ้น'},{w:2,text:'ตื่นมาสดชื่นสม่ำเสมอ'}] },
+  { name:'Pro+Prebiotic', cat:'gut', group:'เห็นผลเร็ว', targetWeeks:4,
+    note:'ท้องไม่อืด ระบบย่อยสม่ำเสมอ',
+    milestones:[{w:2,text:'ท้องอืดลดลง'},{w:4,text:'ระบบย่อยสม่ำเสมอ'}] },
+  { name:'Vitamin C 1,000 มก.', cat:'water', group:'เห็นผลเร็ว', targetWeeks:4,
+    note:'ผิวสดใส รอยดำจาง ภูมิคุ้มกันดีขึ้น',
+    milestones:[{w:2,text:'ผิวสดใสขึ้น'},{w:4,text:'รอยดำเริ่มจาง'}] },
+  { name:'B Complex (Thorne Basic B)', cat:'bvit', group:'เห็นผลเร็ว', targetWeeks:4,
+    note:'พลังงานดีขึ้น สมองใส ไม่ล้าง่าย',
+    milestones:[{w:2,text:'พลังงานดีขึ้น'},{w:4,text:'สมองโฟกัสดีขึ้น'}] },
+  { name:'Zinc 15 มก. (2 วัน/สัปดาห์)', cat:'mineral', group:'เห็นผลเร็ว', targetWeeks:4,
+    note:'ผิวอักเสบลดลง ภูมิคุ้มกันดีขึ้น',
+    milestones:[{w:3,text:'ผิวอักเสบลดลง'},{w:4,text:'ภูมิคุ้มกันตอบสนองเร็วขึ้น'}] },
+  { name:'Fish Oil (Omega-3)', cat:'fat', group:'เห็นผลปานกลาง', targetWeeks:8,
+    note:'ข้อไม่ตึง ลด Triglyceride ผิวชุ่มชื้น',
+    milestones:[{w:4,text:'ผิวชุ่มชื้นขึ้น'},{w:8,text:'ข้อต่อไม่ตึง'}] },
+  { name:'CoQ10 100 มก.', cat:'fat', group:'เห็นผลปานกลาง', targetWeeks:8,
+    note:'ทนทานการทำงานนาน ไม่ล้าตอนบ่าย',
+    milestones:[{w:4,text:'ไม่ล้าง่าย'},{w:8,text:'พลังงานสม่ำเสมอทั้งวัน'}] },
+  { name:'Hyaluronic Acid 250 มก.', cat:'water', group:'เห็นผลปานกลาง', targetWeeks:8,
+    note:'ผิวอิ่มขึ้น ข้อต่อหล่อลื่น',
+    milestones:[{w:4,text:'ผิวอิ่มขึ้น'},{w:8,text:'ข้อต่อหล่อลื่น ลดตึง'}] },
+  { name:'D3 5,000 IU + K2', cat:'fat', group:'เห็นผลปานกลาง', targetWeeks:8,
+    note:'ภูมิคุ้มกัน อารมณ์ พลังงานดีขึ้น',
+    milestones:[{w:4,text:'อารมณ์สม่ำเสมอ'},{w:8,text:'ภูมิคุ้มกันแข็งแรง'}] },
+  { name:'Astaxanthin 6 มก.', cat:'fat', group:'เห็นผลระยะยาว', targetWeeks:12,
+    note:'ผิวยืดหยุ่น ทนแดด ลด oxidative stress',
+    milestones:[{w:6,text:'ผิวดูสดใสขึ้น'},{w:12,text:'ผิวยืดหยุ่น ทนแดดดีขึ้น'}] },
+  { name:'Lycopene 60 มก.', cat:'fat', group:'เห็นผลระยะยาว', targetWeeks:12,
+    note:'ผิวโทนสม่ำเสมอ หลอดเลือดแข็งแรง',
+    milestones:[{w:8,text:'ผิวโทนสม่ำเสมอ'},{w:12,text:'ลด LDL oxidation'}] },
+  { name:'Persimmon Powder', cat:'gut', group:'เห็นผลระยะยาว', targetWeeks:8,
+    note:'ลด oxidative stress ในลำไส้ ดูแลตับ',
+    milestones:[{w:4,text:'ลำไส้อักเสบลดลง'},{w:8,text:'ตับแข็งแรงขึ้น'}] },
+  { name:'D3+K2 (กระดูก/หลอดเลือด)', cat:'fat', group:'เห็นผลระยะยาว', targetWeeks:26,
+    note:'กระดูกหนาแน่น ป้องกัน Calcium ในหลอดเลือด',
+    milestones:[{w:12,text:'กระดูกแข็งแรงขึ้น'},{w:26,text:'ป้องกันหลอดเลือดระยะยาว'}] },
+]
+
+function getDays(){ return Math.max(0, Math.floor((new Date()-START)/(24*60*60*1000))) }
+function getWeeks(){ return Math.max(0, Math.floor((new Date()-START)/(7*24*60*60*1000))) }
+
+function render(){
+  const days = getDays()
+  const weeks = getWeeks()
+  const pct = Math.min(100, Math.round((weeks/TOTAL_WEEKS)*100))
+
+  document.getElementById('header-sub').textContent = 'เริ่ม 22 มี.ค. 2569 · อัปเดตอัตโนมัติทุกวัน'
+  document.getElementById('stat-days').textContent = days
+  document.getElementById('stat-weeks').textContent = weeks
+  document.getElementById('stat-pct').textContent = pct+'%'
+
+  const groups = ['เห็นผลเร็ว','เห็นผลปานกลาง','เห็นผลระยะยาว']
+  const groupLabels = {
+    'เห็นผลเร็ว':'เห็นผลเร็ว — 1–4 สัปดาห์',
+    'เห็นผลปานกลาง':'เห็นผลปานกลาง — 1–3 เดือน',
+    'เห็นผลระยะยาว':'เห็นผลระยะยาว — 3+ เดือน'
+  }
+
+  let html = ''
+  groups.forEach(group => {
+    const items = supplements.filter(s => s.group===group)
+    html += `<div class="section"><div class="section-label">${groupLabels[group]}</div>`
+    items.forEach(s => {
+      const c = CAT[s.cat]
+      const fillPct = Math.min(100, Math.round((weeks/TOTAL_WEEKS)*100))
+      const targetPct = Math.min(97, Math.round((s.targetWeeks/TOTAL_WEEKS)*100))
+      const reached = weeks >= s.targetWeeks
+      const badge = reached
+        ? `<span class="badge badge-done">เห็นผลแล้ว ✓</span>`
+        : weeks > 0
+        ? `<span class="badge badge-going">สัปดาห์ที่ ${weeks}/${s.targetWeeks}</span>`
+        : `<span class="badge badge-soon">เพิ่งเริ่ม</span>`
+
+      const ms = s.milestones.map(m => {
+        const hit = weeks >= m.w
+        return `<div class="milestone-row">
+          <div class="m-dot" style="background:${hit?c.color:'#d3d1c7'};"></div>
+          <span class="m-text" style="color:${hit?'#1a1a18':'#b4b2a9'};">สัปดาห์ ${m.w} — ${m.text}${hit?' ✓':''}</span>
+        </div>`
+      }).join('')
+
+      html += `<div class="card">
+        <span class="cat-pill" style="background:${c.bg};color:${c.text};">
+          <span style="width:6px;height:6px;border-radius:50%;background:${c.color};display:inline-block;flex-shrink:0;"></span>${c.label}
+        </span>
+        <div class="card-top"><span class="card-name">${s.name}</span>${badge}</div>
+        <div class="progress-labels">
+          <span>สัปดาห์ที่ ${weeks}</span><span>เป้า ${s.targetWeeks} สัปดาห์</span><span>26 สัปดาห์</span>
+        </div>
+        <div style="position:relative;">
+          <div class="bar-track"><div class="bar-fill" style="width:${fillPct}%;background:${c.color};"></div></div>
+          <div style="position:absolute;top:-11px;left:${targetPct}%;width:2px;height:16px;background:${c.color};opacity:0.35;border-radius:1px;"></div>
+        </div>
+        <div class="card-note">${s.note}</div>
+        ${ms}
+      </div>`
+    })
+    html += '</div>'
+  })
+  document.getElementById('content').innerHTML = html
+}
+
+render()
+</script>
+</body>
+</html>
