@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Supplements">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Supplements</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Sarabun',sans-serif;background:#f8f7f4;color:#1a1a18;padding-bottom:2rem;}
+.nav{display:flex;background:#fff;border-bottom:1px solid #e8e6e0;position:sticky;top:0;z-index:20;}
+.nav-tab{flex:1;padding:14px 8px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:500;color:#888780;background:transparent;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;}
+.nav-tab.active{color:#1a1a18;border-bottom-color:#1a1a18;}
+.page{display:none;}
+.page.show{display:block;}
+.sch-wrap{padding:1.25rem;}
+.sch-wrap h1{font-size:18px;font-weight:500;margin-bottom:4px;}
+.subtitle{font-size:13px;color:#888780;margin-bottom:1.25rem;font-weight:300;}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:1.25rem;}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:#5F5E5A;}
+.dot{width:8px;height:8px;border-radius:50%;}
+.day-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:0.75rem;}
+.tab{font-size:12px;font-weight:500;padding:5px 11px;border-radius:20px;border:1px solid #ccc;color:#5F5E5A;background:transparent;cursor:pointer;transition:all 0.15s;}
+.tab.active{background:#fff;border-color:#888;color:#1a1a18;}
+.tab.zinc-day{border-color:#F5C4B3;color:#993C1D;}
+.tab.zinc-day.active{background:#FAECE7;border-color:#D85A30;color:#712B13;}
+.tab.d3-day{border-color:#B5D4F4;color:#185FA5;}
+.tab.d3-day.active{background:#E6F1FB;border-color:#378ADD;color:#0C447C;}
+.system{display:none;}
+.system.show{display:block;}
+.badge-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.badge{font-size:11px;font-weight:500;border-radius:20px;padding:3px 10px;}
+.time-block{margin-bottom:1rem;}
+.time-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.time-label{font-size:11px;font-weight:500;color:#5F5E5A;letter-spacing:0.04em;white-space:nowrap;}
+.time-line{flex:1;height:0.5px;background:#e0ded8;}
+.pill-row{display:flex;flex-direction:column;gap:6px;}
+.pill-item{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.pill{font-size:12px;padding:6px 12px;border-radius:20px;border:1px solid #ddd;background:#fff;color:#1a1a18;flex:1;transition:opacity 0.2s;}
+.fat{background:#E1F5EE;border-color:#9FE1CB;color:#085041;}
+.water{background:#E6F1FB;border-color:#B5D4F4;color:#0C447C;}
+.mineral{background:#FAEEDA;border-color:#FAC775;color:#633806;}
+.gut{background:#EAF3DE;border-color:#C0DD97;color:#27500A;}
+.caution{background:#FAECE7;border-color:#F5C4B3;color:#712B13;}
+.bvit{background:#EEEDFE;border-color:#AFA9EC;color:#3C3489;}
+.pill.done{opacity:0.35;text-decoration:line-through;}
+.check{width:24px;height:24px;border-radius:50%;border:1.5px solid #ccc;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;transition:all 0.2s;color:transparent;}
+.check.checked{background:#1D9E75;border-color:#1D9E75;color:#fff;}
+.prog-wrap{margin:0.75rem 0 1.25rem;}
+.prog-label{font-size:11px;color:#888780;margin-bottom:5px;display:flex;justify-content:space-between;}
+.prog-bg{height:6px;background:#e8e6e0;border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;background:#1D9E75;border-radius:3px;transition:width 0.3s;}
+.note-box{background:#f1efe8;border-radius:8px;padding:0.55rem 0.875rem;font-size:12px;color:#5F5E5A;line-height:1.6;margin-top:6px;}
+.warn-box{background:#FAEEDA;border:1px solid #FAC775;border-radius:8px;padding:0.55rem 0.875rem;font-size:12px;color:#633806;line-height:1.6;margin-top:6px;}
+b{font-weight:500;}
+.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:1rem;background:#fff;border-bottom:1px solid #e8e6e0;}
+.stat{background:#f8f7f4;border-radius:10px;padding:0.75rem;text-align:center;}
+.stat-num{font-size:22px;font-weight:500;}
+.stat-label{font-size:10px;color:#888780;margin-top:2px;font-weight:300;}
+.p-legend{display:flex;flex-wrap:wrap;gap:10px;padding:0.875rem 1rem;background:#fff;border-bottom:1px solid #e8e6e0;}
+.p-leg{display:flex;align-items:center;gap:5px;font-size:11px;color:#5f5e5a;font-weight:300;}
+.p-leg-dot{width:8px;height:8px;border-radius:50%;}
+.p-section{padding:0 1rem;margin-top:1.25rem;}
+.p-section-label{font-size:11px;font-weight:500;color:#888780;letter-spacing:0.04em;margin-bottom:8px;}
+.p-card{background:#fff;border-radius:14px;padding:0.875rem 1rem;margin-bottom:8px;border:1px solid #e8e6e0;}
+.p-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px;gap:8px;}
+.p-card-name{font-size:13px;font-weight:500;color:#1a1a18;line-height:1.3;}
+.p-badge{font-size:10px;padding:2px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0;}
+.p-badge-done{background:#e1f5ee;color:#085041;}
+.p-badge-going{background:#e6f1fb;color:#0c447c;}
+.p-badge-soon{background:#f1efe8;color:#5f5e5a;}
+.p-bar-bg{height:8px;background:#f1efe8;border-radius:4px;overflow:hidden;margin-bottom:4px;}
+.p-bar-fill{height:100%;border-radius:4px;}
+.p-bar-labels{display:flex;justify-content:space-between;font-size:10px;color:#888780;margin-bottom:4px;font-weight:300;}
+.p-note{font-size:11px;color:#888780;margin-top:5px;font-weight:300;line-height:1.6;}
+.p-ms{display:flex;align-items:center;gap:6px;margin-top:5px;}
+.p-ms-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.p-ms-text{font-size:11px;font-weight:300;line-height:1.4;}
+.cat-pill{font-size:10px;padding:2px 8px;border-radius:10px;display:inline-flex;align-items:center;gap:4px;margin-bottom:5px;}
+</style>
+</head>
+<body>
+<div class="nav">
+  <button class="nav-tab active" onclick="switchPage('schedule')">ตารางกิน</button>
+  <button class="nav-tab" onclick="switchPage('progress')">Progress</button>
+</div>
+
+<div id="page-schedule" class="page show">
+  <div class="sch-wrap">
+    <h1>Supplement Schedule</h1>
+    <p class="subtitle">รวม B Complex (Thorne Basic B) วันเว้นวัน</p>
+    <div class="legend">
+      <div class="leg"><div class="dot" style="background:#1D9E75;"></div>Fat-soluble</div>
+      <div class="leg"><div class="dot" style="background:#378ADD;"></div>Water-soluble</div>
+      <div class="leg"><div class="dot" style="background:#BA7517;"></div>Mineral</div>
+      <div class="leg"><div class="dot" style="background:#639922;"></div>Gut</div>
+      <div class="leg"><div class="dot" style="background:#7F77DD;"></div>B Complex</div>
+    </div>
+    <div class="day-tabs">
+      <button class="tab zinc-day" onclick="showDay('mon')">Mon</button>
+      <button class="tab d3-day" onclick="showDay('tue')">Tue</button>
+      <button class="tab" onclick="showDay('wed')">Wed</button>
+      <button class="tab d3-day" onclick="showDay('thu')">Thu</button>
+      <button class="tab zinc-day" onclick="showDay('fri')">Fri</button>
+      <button class="tab d3-day" onclick="showDay('sat')">Sat</button>
+      <button class="tab" onclick="showDay('sun')">Sun</button>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-label"><span id="prog-text">กินแล้ว 0 จาก 0 รายการ</span><span id="prog-pct">0%</span></div>
+      <div class="prog-bg"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+
+    <div id="mon" class="system">
+      <div class="badge-row"><span class="badge" style="color:#993C1D;background:#FAECE7;">Zinc day</span><span class="badge" style="color:#3C3489;background:#EEEDFE;">B Complex day</span></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">หลังตื่น — ท้องว่าง</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill gut">Pro+Prebiotic</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">เช้า — พร้อมอาหาร (มีไขมัน)</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Fish Oil</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Astaxanthin 6 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">CoQ10 100 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill water">Vitamin C 500 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill bvit">B Complex (Thorne Basic B)</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill caution">Persimmon 200 มก. *</span></div></div><div class="warn-box"><b>* วันนี้กิน Zinc บ่าย</b> — Persimmon เช้า Zinc บ่าย ห่างกัน ~4–5 ชม. ✓</div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">บ่าย — พร้อมอาหารเบาๆ</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill mineral">Zinc 15 มก. (Bisglycinate)</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill water">Vitamin C 500 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Hyaluronic Acid 250 มก.</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">ก่อนนอน</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill mineral">Magnesium 200 มก.</span></div></div><div class="note-box">ห่างจาก Zinc บ่ายอย่างน้อย 4–5 ชม. ✓</div></div>
+    </div>
+
+    <div id="tue" class="system">
+      <div class="badge-row"><span class="badge" style="color:#0C447C;background:#E6F1FB;">D3 + Lycopene day</span><span class="badge" style="color:#3C3489;background:#EEEDFE;">B Complex day</span></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">หลังตื่น — ท้องว่าง</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill gut">Pro+Prebiotic</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">เช้า — พร้อมอาหาร (มีไขมัน)</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Fish Oil</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">D3 5,000 IU + K2 100 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Astaxanthin 6 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">CoQ10 100 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill water">Vitamin C 500 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill bvit">B Complex (Thorne Basic B)</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Persimmon 200 มก.</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">บ่าย — พร้อมอาหาร</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill water">Vitamin C 500 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Lycopene 60 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Hyaluronic Acid 250 มก.</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">ก่อนนอน</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill mineral">Magnesium 200 มก.</span></div></div></div>
+    </div>
+
+    <div id="wed" class="system">
+      <div class="badge-row"><span class="badge" style="color:#444441;background:#F1EFE8;">วันปกติ — หยุด B Complex</span></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">หลังตื่น — ท้องว่าง</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill gut">Pro+Prebiotic</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">เช้า — พร้อมอาหาร (มีไขมัน)</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Fish Oil</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Astaxanthin 6 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">CoQ10 100 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill water">Vitamin C 500 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Persimmon 200 มก.</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">บ่าย</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill water">Vitamin C 500 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Hyaluronic Acid 250 มก.</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">ก่อนนอน</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill mineral">Magnesium 200 มก.</span></div></div></div>
+    </div>
+
+    <div id="thu" class="system">
+      <div class="badge-row"><span class="badge" style="color:#0C447C;background:#E6F1FB;">D3 + Lycopene day</span><span class="badge" style="color:#3C3489;background:#EEEDFE;">B Complex day</span></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">หลังตื่น — ท้องว่าง</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill gut">Pro+Prebiotic</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">เช้า — พร้อมอาหาร (มีไขมัน)</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Fish Oil</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">D3 5,000 IU + K2 100 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Astaxanthin 6 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">CoQ10 100 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill water">Vitamin C 500 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill bvit">B Complex (Thorne Basic B)</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Persimmon 200 มก.</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">บ่าย — พร้อมอาหาร</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill water">Vitamin C 500 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Lycopene 60 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Hyaluronic Acid 250 มก.</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">ก่อนนอน</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill mineral">Magnesium 200 มก.</span></div></div></div>
+    </div>
+
+    <div id="fri" class="system">
+      <div class="badge-row"><span class="badge" style="color:#993C1D;background:#FAECE7;">Zinc day</span><span class="badge" style="color:#444441;background:#F1EFE8;">หยุด B Complex</span></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">หลังตื่น — ท้องว่าง</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill gut">Pro+Prebiotic</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">เช้า — พร้อมอาหาร (มีไขมัน)</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Fish Oil</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Astaxanthin 6 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">CoQ10 100 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill water">Vitamin C 500 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill caution">Persimmon 200 มก. *</span></div></div><div class="warn-box"><b>* วันนี้กิน Zinc บ่าย</b> — ห่างจาก Persimmon อย่างน้อย 4–5 ชม. ✓</div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">บ่าย — พร้อมอาหารเบาๆ</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill mineral">Zinc 15 มก. (Bisglycinate)</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill water">Vitamin C 500 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Hyaluronic Acid 250 มก.</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">ก่อนนอน</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill mineral">Magnesium 200 มก.</span></div></div></div>
+    </div>
+
+    <div id="sat" class="system">
+      <div class="badge-row"><span class="badge" style="color:#0C447C;background:#E6F1FB;">D3 + Lycopene day</span><span class="badge" style="color:#3C3489;background:#EEEDFE;">B Complex day</span></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">หลังตื่น — ท้องว่าง</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill gut">Pro+Prebiotic</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">เช้า — พร้อมอาหาร (มีไขมัน)</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Fish Oil</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">D3 5,000 IU + K2 100 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Astaxanthin 6 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">CoQ10 100 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill water">Vitamin C 500 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill bvit">B Complex (Thorne Basic B)</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Persimmon 200 มก.</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">บ่าย — พร้อมอาหาร</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill water">Vitamin C 500 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Lycopene 60 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Hyaluronic Acid 250 มก.</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">ก่อนนอน</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill mineral">Magnesium 200 มก.</span></div></div></div>
+    </div>
+
+    <div id="sun" class="system">
+      <div class="badge-row"><span class="badge" style="color:#444441;background:#F1EFE8;">วันพัก — หยุด B Complex</span></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">หลังตื่น — ท้องว่าง</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill gut">Pro+Prebiotic</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">เช้า — พร้อมอาหาร (มีไขมัน)</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Fish Oil</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Astaxanthin 6 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">CoQ10 100 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill water">Vitamin C 500 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Persimmon 200 มก.</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">บ่าย</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill water">Vitamin C 500 มก.</span></div><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill fat">Hyaluronic Acid 250 มก.</span></div></div></div>
+      <div class="time-block"><div class="time-header"><span class="time-label">ก่อนนอน</span><div class="time-line"></div></div><div class="pill-row"><div class="pill-item" onclick="toggle(this)"><div class="check">✓</div><span class="pill mineral">Magnesium 200 มก.</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-progress" class="page">
+  <div class="sch-wrap" style="padding-bottom:0;">
+    <h1>Supplement Progress</h1>
+    <p class="subtitle">เริ่ม 22 มี.ค. 2569 · อัปเดตอัตโนมัติทุกวัน</p>
+  </div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-num" id="stat-days" style="color:#1D9E75;">—</div><div class="stat-label">วันที่กินแล้ว</div></div>
+    <div class="stat"><div class="stat-num" id="stat-weeks" style="color:#378ADD;">—</div><div class="stat-label">สัปดาห์</div></div>
+    <div class="stat"><div class="stat-num" id="stat-pct" style="color:#7F77DD;">—</div><div class="stat-label">ของ 6 เดือน</div></div>
+  </div>
+  <div class="p-legend">
+    <div class="p-leg"><div class="p-leg-dot" style="background:#1D9E75;"></div>Fat-soluble</div>
+    <div class="p-leg"><div class="p-leg-dot" style="background:#378ADD;"></div>Water-soluble</div>
+    <div class="p-leg"><div class="p-leg-dot" style="background:#BA7517;"></div>Mineral</div>
+    <div class="p-leg"><div class="p-leg-dot" style="background:#3B6D11;"></div>Gut</div>
+    <div class="p-leg"><div class="p-leg-dot" style="background:#7F77DD;"></div>B Complex</div>
+  </div>
+  <div id="p-content"></div>
+</div>
+
+<script>
+const DAYS_ARR=['sun','mon','tue','wed','thu','fri','sat'];
+const CHECK_KEY='supp_'+new Date().toDateString();
+function switchPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('show',p.id==='page-'+id));
+  document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',['schedule','progress'][i]===id));
+  if(id==='progress')renderProgress();
+  window.scrollTo(0,0);
+}
+function getChecked(){try{return JSON.parse(localStorage.getItem(CHECK_KEY)||'{}')}catch(e){return{}}}
+function saveChecked(data){
+  localStorage.setItem(CHECK_KEY,JSON.stringify(data));
+  for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(k&&k.startsWith('supp_')&&k!==CHECK_KEY)localStorage.removeItem(k);}
+}
+function toggle(el){
+  const pill=el.querySelector('.pill'),check=el.querySelector('.check');
+  const id=pill.textContent.trim()+'_'+el.closest('[id]').id;
+  const checked=getChecked();
+  if(checked[id]){delete checked[id];pill.classList.remove('done');check.classList.remove('checked');}
+  else{checked[id]=true;pill.classList.add('done');check.classList.add('checked');}
+  saveChecked(checked);updateProgBar();
+}
+function updateProgBar(){
+  const vis=document.querySelector('.system.show');if(!vis)return;
+  const t=vis.querySelectorAll('.pill-item').length,c=vis.querySelectorAll('.check.checked').length;
+  const p=t>0?Math.round((c/t)*100):0;
+  document.getElementById('prog-text').textContent='กินแล้ว '+c+' จาก '+t+' รายการ';
+  document.getElementById('prog-pct').textContent=p+'%';
+  document.getElementById('prog-fill').style.width=p+'%';
+}
+function restoreChecked(){
+  const checked=getChecked();
+  document.querySelectorAll('.pill-item').forEach(el=>{
+    const pill=el.querySelector('.pill'),check=el.querySelector('.check');
+    const id=pill.textContent.trim()+'_'+el.closest('[id]').id;
+    if(checked[id]){pill.classList.add('done');check.classList.add('checked');}
+  });
+}
+function showDay(id){
+  ['mon','tue','wed','thu','fri','sat','sun'].forEach(d=>document.getElementById(d).classList.toggle('show',d===id));
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['mon','tue','wed','thu','fri','sat','sun'][i]===id));
+  updateProgBar();
+}
+const START=new Date('2026-03-22'),TOTAL_WEEKS=26;
+const CAT={fat:{color:'#1D9E75',bg:'#e1f5ee',text:'#085041',label:'Fat-soluble'},water:{color:'#378ADD',bg:'#e6f1fb',text:'#0c447c',label:'Water-soluble'},mineral:{color:'#BA7517',bg:'#faeeda',text:'#633806',label:'Mineral'},gut:{color:'#3B6D11',bg:'#eaf3de',text:'#27500a',label:'Gut'},bvit:{color:'#7F77DD',bg:'#eeedfe',text:'#3c3489',label:'B Complex'}};
+const SUPPS=[
+  {name:'Magnesium Glycinate',cat:'mineral',group:'เห็นผลเร็ว',tw:2,note:'นอนหลับลึกขึ้น กล้ามเนื้อไม่ล้า',ms:[{w:1,t:'เริ่มนอนหลับดีขึ้น'},{w:2,t:'ตื่นมาสดชื่นสม่ำเสมอ'}]},
+  {name:'Pro+Prebiotic',cat:'gut',group:'เห็นผลเร็ว',tw:4,note:'ท้องไม่อืด ระบบย่อยสม่ำเสมอ',ms:[{w:2,t:'ท้องอืดลดลง'},{w:4,t:'ระบบย่อยสม่ำเสมอ'}]},
+  {name:'Vitamin C 1,000 มก.',cat:'water',group:'เห็นผลเร็ว',tw:4,note:'ผิวสดใส รอยดำจาง ภูมิคุ้มกันดีขึ้น',ms:[{w:2,t:'ผิวสดใสขึ้น'},{w:4,t:'รอยดำเริ่มจาง'}]},
+  {name:'B Complex (Thorne)',cat:'bvit',group:'เห็นผลเร็ว',tw:4,note:'พลังงานดีขึ้น สมองใส ไม่ล้าง่าย',ms:[{w:2,t:'พลังงานดีขึ้น'},{w:4,t:'สมองโฟกัสดีขึ้น'}]},
+  {name:'Zinc 15 มก.',cat:'mineral',group:'เห็นผลเร็ว',tw:4,note:'ผิวอักเสบลดลง ภูมิคุ้มกันดีขึ้น',ms:[{w:3,t:'ผิวอักเสบลดลง'},{w:4,t:'ภูมิคุ้มกันตอบสนองเร็วขึ้น'}]},
+  {name:'Fish Oil (Omega-3)',cat:'fat',group:'เห็นผลปานกลาง',tw:8,note:'ข้อไม่ตึง ลด Triglyceride ผิวชุ่มชื้น',ms:[{w:4,t:'ผิวชุ่มชื้นขึ้น'},{w:8,t:'ข้อต่อไม่ตึง'}]},
+  {name:'CoQ10 100 มก.',cat:'fat',group:'เห็นผลปานกลาง',tw:8,note:'ทนทานการทำงานนาน ไม่ล้าตอนบ่าย',ms:[{w:4,t:'ไม่ล้าง่าย'},{w:8,t:'พลังงานสม่ำเสมอทั้งวัน'}]},
+  {name:'Hyaluronic Acid 250 มก.',cat:'water',group:'เห็นผลปานกลาง',tw:8,note:'ผิวอิ่มขึ้น ข้อต่อหล่อลื่น',ms:[{w:4,t:'ผิวอิ่มขึ้น'},{w:8,t:'ข้อต่อหล่อลื่น ลดตึง'}]},
+  {name:'D3 5,000 IU + K2',cat:'fat',group:'เห็นผลปานกลาง',tw:8,note:'ภูมิคุ้มกัน อารมณ์ พลังงานดีขึ้น',ms:[{w:4,t:'อารมณ์สม่ำเสมอ'},{w:8,t:'ภูมิคุ้มกันแข็งแรง'}]},
+  {name:'Astaxanthin 6 มก.',cat:'fat',group:'เห็นผลระยะยาว',tw:12,note:'ผิวยืดหยุ่น ทนแดด ลด oxidative stress',ms:[{w:6,t:'ผิวดูสดใสขึ้น'},{w:12,t:'ผิวยืดหยุ่น ทนแดดดีขึ้น'}]},
+  {name:'Lycopene 60 มก.',cat:'fat',group:'เห็นผลระยะยาว',tw:12,note:'ผิวโทนสม่ำเสมอ หลอดเลือดแข็งแรง',ms:[{w:8,t:'ผิวโทนสม่ำเสมอ'},{w:12,t:'ลด LDL oxidation'}]},
+  {name:'Persimmon Powder',cat:'gut',group:'เห็นผลระยะยาว',tw:8,note:'ลด oxidative stress ในลำไส้ ดูแลตับ',ms:[{w:4,t:'ลำไส้อักเสบลดลง'},{w:8,t:'ตับแข็งแรงขึ้น'}]},
+  {name:'D3+K2 (กระดูก/หลอดเลือด)',cat:'fat',group:'เห็นผลระยะยาว',tw:26,note:'กระดูกหนาแน่น ป้องกัน Calcium ในหลอดเลือด',ms:[{w:12,t:'กระดูกแข็งแรงขึ้น'},{w:26,t:'ป้องกันหลอดเลือดระยะยาว'}]},
+];
+function renderProgress(){
+  const days=Math.max(0,Math.floor((new Date()-START)/(24*60*60*1000)));
+  const weeks=Math.max(0,Math.floor((new Date()-START)/(7*24*60*60*1000)));
+  const pct=Math.min(100,Math.round((weeks/TOTAL_WEEKS)*100));
+  document.getElementById('stat-days').textContent=days;
+  document.getElementById('stat-weeks').textContent=weeks;
+  document.getElementById('stat-pct').textContent=pct+'%';
+  const groups=['เห็นผลเร็ว','เห็นผลปานกลาง','เห็นผลระยะยาว'];
+  const gL={'เห็นผลเร็ว':'เห็นผลเร็ว — 1–4 สัปดาห์','เห็นผลปานกลาง':'เห็นผลปานกลาง — 1–3 เดือน','เห็นผลระยะยาว':'เห็นผลระยะยาว — 3+ เดือน'};
+  let html='';
+  groups.forEach(g=>{
+    html+=`<div class="p-section"><div class="p-section-label">${gL[g]}</div>`;
+    SUPPS.filter(s=>s.group===g).forEach(s=>{
+      const c=CAT[s.cat],fill=Math.min(100,Math.round((weeks/TOTAL_WEEKS)*100)),tgt=Math.min(97,Math.round((s.tw/TOTAL_WEEKS)*100)),reached=weeks>=s.tw;
+      const badge=reached?`<span class="p-badge p-badge-done">เห็นผลแล้ว ✓</span>`:weeks>0?`<span class="p-badge p-badge-going">สัปดาห์ ${weeks}/${s.tw}</span>`:`<span class="p-badge p-badge-soon">เพิ่งเริ่ม</span>`;
+      const ms=s.ms.map(m=>{const hit=weeks>=m.w;return`<div class="p-ms"><div class="p-ms-dot" style="background:${hit?c.color:'#d3d1c7'};"></div><span class="p-ms-text" style="color:${hit?'#1a1a18':'#b4b2a9'};">สัปดาห์ ${m.w} — ${m.t}${hit?' ✓':''}</span></div>`;}).join('');
+      html+=`<div class="p-card"><span class="cat-pill" style="background:${c.bg};color:${c.text};"><span style="width:6px;height:6px;border-radius:50%;background:${c.color};display:inline-block;flex-shrink:0;"></span>${c.label}</span><div class="p-card-top"><span class="p-card-name">${s.name}</span>${badge}</div><div class="p-bar-labels"><span>สัปดาห์ที่ ${weeks}</span><span>เป้า ${s.tw} สัปดาห์</span><span>26 สัปดาห์</span></div><div style="position:relative;"><div class="p-bar-bg"><div class="p-bar-fill" style="width:${fill}%;background:${c.color};"></div></div><div style="position:absolute;top:-11px;left:${tgt}%;width:2px;height:16px;background:${c.color};opacity:0.35;border-radius:1px;"></div></div><div class="p-note">${s.note}</div>${ms}</div>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('p-content').innerHTML=html;
+}
+restoreChecked();
+showDay(DAYS_ARR[new Date().getDay()]);
+</script>
+</body>
+</html>
