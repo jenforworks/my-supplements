@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Supplements">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Supplements</title>
+<style>
+:root{
+  --bg:#f8f7f4;--card:#fff;--border:#e8e6e0;--text:#1a1a18;--text2:#5F5E5A;--text3:#888780;
+  --bar-bg:#e8e6e0;--section-bg:#f1efe8;
+  --fat-c:#1D9E75;--fat-bg:#E1F5EE;--fat-bd:#9FE1CB;--fat-t:#085041;
+  --water-c:#378ADD;--water-bg:#E6F1FB;--water-bd:#B5D4F4;--water-t:#0C447C;
+  --mineral-c:#BA7517;--mineral-bg:#FAEEDA;--mineral-bd:#FAC775;--mineral-t:#633806;
+  --gut-c:#3B6D11;--gut-bg:#EAF3DE;--gut-bd:#C0DD97;--gut-t:#27500A;
+  --bvit-c:#7F77DD;--bvit-bg:#EEEDFE;--bvit-bd:#AFA9EC;--bvit-t:#3C3489;
+  --amino-c:#C4377A;--amino-bg:#FDE8F0;--amino-bd:#F2B3CB;--amino-t:#8C1D49;
+  --check:#1D9E75;--warn-bg:#FAEEDA;--warn-bd:#FAC775;--warn-t:#633806;
+  --zinc-bd:#F5C4B3;--zinc-t:#993C1D;--zinc-bg:#FAECE7;--zinc-at:#712B13;
+  --d3-bd:#B5D4F4;--d3-t:#185FA5;--d3-bg:#E6F1FB;--d3-at:#0C447C;
+  --input-bg:#fff;--input-bd:#ddd;
+}
+[data-theme="dark"]{
+  --bg:#1a1a1e;--card:#26262b;--border:#3a3a40;--text:#e8e6e0;--text2:#a0a09a;--text3:#777770;
+  --bar-bg:#3a3a40;--section-bg:#2a2a30;
+  --fat-bg:#0d3028;--fat-bd:#1a5040;--fat-t:#7ddbb8;
+  --water-bg:#0c2a44;--water-bd:#1a4570;--water-t:#8ec4f0;
+  --mineral-bg:#3a2a0a;--mineral-bd:#5a4010;--mineral-t:#ddb050;
+  --gut-bg:#1a2a0a;--gut-bd:#2a4010;--gut-t:#90c060;
+  --bvit-bg:#2a2844;--bvit-bd:#3a3860;--bvit-t:#b0a8e8;
+  --amino-bg:#3a1828;--amino-bd:#5a2840;--amino-t:#e888b0;
+  --warn-bg:#3a2a10;--warn-bd:#5a4020;--warn-t:#ddb050;
+  --zinc-bd:#5a2818;--zinc-t:#e88860;--zinc-bg:#3a1a10;--zinc-at:#ffb090;
+  --d3-bd:#1a4570;--d3-t:#8ec4f0;--d3-bg:#0c2a44;--d3-at:#c0e0ff;
+  --input-bg:#2a2a30;--input-bd:#4a4a50;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);padding-bottom:2rem;transition:background .3s,color .3s;}
+.nav{display:flex;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;align-items:center;}
+.nav-tab{flex:1;padding:14px 4px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500;color:var(--text3);background:transparent;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;}
+.nav-tab.active{color:var(--text);border-bottom-color:var(--text);}
+.theme-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;margin-right:10px;flex-shrink:0;}
+.page{display:none;}.page.show{display:block;}
+.wrap{padding:1.25rem;}
+.wrap h1{font-size:18px;font-weight:500;margin-bottom:4px;}
+.subtitle{font-size:13px;color:var(--text3);margin-bottom:1.25rem;font-weight:300;}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:1.25rem;}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);}
+.dot{width:8px;height:8px;border-radius:50%;}
+.day-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:.75rem;}
+.tab{font-size:12px;font-weight:500;padding:5px 11px;border-radius:20px;border:1px solid var(--border);color:var(--text2);background:transparent;cursor:pointer;transition:all .15s;}
+.tab.active{background:var(--card);border-color:var(--text3);color:var(--text);}
+.tab.zinc-day{border-color:var(--zinc-bd);color:var(--zinc-t);}
+.tab.zinc-day.active{background:var(--zinc-bg);border-color:var(--zinc-bd);color:var(--zinc-at);}
+.tab.d3-day{border-color:var(--d3-bd);color:var(--d3-t);}
+.tab.d3-day.active{background:var(--d3-bg);border-color:var(--d3-bd);color:var(--d3-at);}
+.prog-wrap{margin:.75rem 0 1.25rem;}
+.prog-label{font-size:11px;color:var(--text3);margin-bottom:5px;display:flex;justify-content:space-between;}
+.prog-bg{height:6px;background:var(--bar-bg);border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--check);border-radius:3px;transition:width .3s;}
+.badge-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.badge{font-size:11px;font-weight:500;border-radius:20px;padding:3px 10px;}
+.time-block{margin-bottom:1rem;}
+.time-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.time-label{font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.04em;white-space:nowrap;}
+.time-line{flex:1;height:.5px;background:var(--border);}
+.pill-row{display:flex;flex-direction:column;gap:6px;}
+.pill-item{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.pill{font-size:12px;padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--text);flex:1;transition:opacity .2s;}
+.c-fat{background:var(--fat-bg);border-color:var(--fat-bd);color:var(--fat-t);}
+.c-water{background:var(--water-bg);border-color:var(--water-bd);color:var(--water-t);}
+.c-mineral{background:var(--mineral-bg);border-color:var(--mineral-bd);color:var(--mineral-t);}
+.c-gut{background:var(--gut-bg);border-color:var(--gut-bd);color:var(--gut-t);}
+.c-bvit{background:var(--bvit-bg);border-color:var(--bvit-bd);color:var(--bvit-t);}
+.c-amino{background:var(--amino-bg);border-color:var(--amino-bd);color:var(--amino-t);}
+.pill.done{opacity:.35;text-decoration:line-through;}
+.pill-item.paused{pointer-events:none;cursor:default;}
+.pill-item.paused .pill{opacity:.3;border-style:dashed;}
+.pill-item.paused .check{opacity:.2;}
+.pause-label{font-size:10px;color:var(--warn-t);background:var(--warn-bg);border-radius:6px;padding:2px 8px;margin-top:2px;margin-bottom:4px;}
+.inv-paused{opacity:.5;}
+.inv-pause-badge{font-size:10px;color:var(--warn-t);background:var(--warn-bg);border-radius:8px;padding:1px 7px;margin-left:6px;}
+.check{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;transition:all .2s;color:transparent;}
+.check.checked{background:var(--check);border-color:var(--check);color:#fff;}
+.note-box{background:var(--section-bg);border-radius:8px;padding:.55rem .875rem;font-size:12px;color:var(--text2);line-height:1.6;margin-top:6px;}
+.warn-box{background:var(--warn-bg);border:1px solid var(--warn-bd);border-radius:8px;padding:.55rem .875rem;font-size:12px;color:var(--warn-t);line-height:1.6;margin-top:6px;}
+b{font-weight:500;}
+.daily-note{margin-top:1rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.75rem;}
+.daily-note-title{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:6px;}
+.daily-note textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--text);background:var(--input-bg);resize:vertical;min-height:55px;outline:none;}
+.daily-note textarea:focus{border-color:var(--check);}
+.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:1rem;background:var(--card);border-bottom:1px solid var(--border);}
+.stat{background:var(--bg);border-radius:10px;padding:.75rem;text-align:center;}
+.stat-num{font-size:22px;font-weight:500;}
+.stat-label{font-size:10px;color:var(--text3);margin-top:2px;font-weight:300;}
+.p-legend{display:flex;flex-wrap:wrap;gap:10px;padding:.875rem 1rem;background:var(--card);border-bottom:1px solid var(--border);}
+.p-leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);font-weight:300;}
+.p-leg-dot{width:8px;height:8px;border-radius:50%;}
+.p-section{padding:0 1rem;margin-top:1.25rem;}
+.p-section-label{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.04em;margin-bottom:8px;}
+.p-card{background:var(--card);border-radius:14px;padding:.875rem 1rem;margin-bottom:8px;border:1px solid var(--border);}
+.p-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px;gap:8px;}
+.p-card-name{font-size:13px;font-weight:500;line-height:1.3;}
+.p-badge{font-size:10px;padding:2px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0;}
+.p-badge-done{background:var(--fat-bg);color:var(--fat-t);}
+.p-badge-going{background:var(--water-bg);color:var(--water-t);}
+.p-badge-soon{background:var(--section-bg);color:var(--text2);}
+.p-bar-bg{height:8px;background:var(--section-bg);border-radius:4px;overflow:hidden;margin-bottom:4px;}
+.p-bar-fill{height:100%;border-radius:4px;}
+.p-bar-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:4px;font-weight:300;}
+.p-note{font-size:11px;color:var(--text3);margin-top:5px;font-weight:300;line-height:1.6;}
+.p-ms{display:flex;align-items:center;gap:6px;margin-top:5px;}
+.p-ms-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.p-ms-text{font-size:11px;font-weight:300;line-height:1.4;}
+.cat-pill{font-size:10px;padding:2px 8px;border-radius:10px;display:inline-flex;align-items:center;gap:4px;margin-bottom:5px;}
+.inv-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.75rem 1rem;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.inv-color{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.inv-info{flex:1;min-width:0;}
+.inv-name{font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.inv-detail{font-size:11px;color:var(--text3);font-weight:300;}
+.inv-qty{text-align:right;flex-shrink:0;}
+.inv-qty-num{font-size:16px;font-weight:500;}
+.inv-qty-label{font-size:10px;color:var(--text3);font-weight:300;}
+.inv-warn{color:#D85A30;}
+.inv-btns{display:flex;gap:4px;flex-shrink:0;}
+.inv-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;color:var(--text2);}
+.form-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1rem;margin:1rem 1rem 0;}
+.form-title{font-size:13px;font-weight:500;margin-bottom:12px;}
+.form-group{margin-bottom:10px;}
+.form-label{font-size:11px;font-weight:500;color:var(--text2);margin-bottom:4px;display:block;}
+.form-input,.form-select{width:100%;padding:8px 10px;border:1px solid var(--input-bd);border-radius:8px;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--text);background:var(--input-bg);outline:none;}
+.form-input:focus,.form-select:focus{border-color:var(--check);}
+.form-row{display:flex;gap:6px;flex-wrap:wrap;}
+.form-chip{font-size:11px;padding:4px 10px;border-radius:16px;border:1px solid var(--border);color:var(--text2);background:transparent;cursor:pointer;transition:all .15s;}
+.form-chip.active{background:var(--check);border-color:var(--check);color:#fff;}
+.form-chip.fc-zinc{border-color:var(--zinc-bd);color:var(--zinc-t);}
+.form-chip.fc-zinc.active{background:var(--zinc-bg);border-color:var(--zinc-bd);color:var(--zinc-at);}
+.form-chip.fc-d3{border-color:var(--d3-bd);color:var(--d3-t);}
+.form-chip.fc-d3.active{background:var(--d3-bg);border-color:var(--d3-bd);color:var(--d3-at);}
+.form-chip-time{font-size:11px;padding:4px 10px;border-radius:16px;border:1px solid var(--border);color:var(--text2);background:transparent;cursor:pointer;transition:all .15s;}
+.form-chip-time.active{background:var(--water-bg);border-color:var(--water-bd);color:var(--water-t);}
+.form-submit{width:100%;padding:10px;border:none;border-radius:10px;background:var(--check);color:#fff;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:500;cursor:pointer;margin-top:6px;}
+.form-submit:active{opacity:.7;}
+.form-cancel{width:100%;padding:8px;border:1px solid var(--border);border-radius:10px;background:transparent;color:var(--text2);font-family:'Sarabun',sans-serif;font-size:13px;cursor:pointer;margin-top:6px;}
+.hidden{display:none!important;}
+</style>
+</head>
+<body>
+<div class="nav">
+  <button class="nav-tab active" onclick="switchPage('schedule')">Schedule</button>
+  <button class="nav-tab" onclick="switchPage('progress')">Progress</button>
+  <button class="nav-tab" onclick="switchPage('inventory')">Inventory</button>
+  <button class="theme-btn" onclick="toggleTheme()">🌓</button>
+</div>
+
+<div id="page-schedule" class="page show">
+  <div class="wrap">
+    <h1>Supplement Schedule</h1>
+    <p class="subtitle">B Complex (Thorne Basic B) กิน อังคาร · พฤหัส · เสาร์</p>
+    <div class="legend" id="legend-area"></div>
+    <div class="day-tabs" id="day-tabs"></div>
+    <div class="prog-wrap">
+      <div class="prog-label"><span id="prog-text">กินแล้ว 0 จาก 0</span><span id="prog-pct">0%</span></div>
+      <div class="prog-bg"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+    <div id="schedule-content"></div>
+    <div class="daily-note">
+      <div class="daily-note-title">📝 บันทึกอาการวันนี้</div>
+      <textarea id="daily-note-input" placeholder="เช่น นอนหลับดี, ท้องไม่อืด, ตาสบาย..." oninput="saveDailyNote()"></textarea>
+    </div>
+  </div>
+</div>
+
+<div id="page-progress" class="page">
+  <div class="wrap" style="padding-bottom:0;">
+    <h1>Supplement Progress</h1>
+    <p class="subtitle">เริ่ม 22 มี.ค. 2569 · แต่ละตัวนับจากวันเริ่มกินจริง</p>
+  </div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-num" id="stat-days" style="color:var(--fat-c);">—</div><div class="stat-label">วันที่กินแล้ว</div></div>
+    <div class="stat"><div class="stat-num" id="stat-weeks" style="color:var(--water-c);">—</div><div class="stat-label">สัปดาห์</div></div>
+    <div class="stat"><div class="stat-num" id="stat-pct" style="color:var(--bvit-c);">—</div><div class="stat-label">ของ 6 เดือน</div></div>
+  </div>
+  <div class="p-legend" id="p-legend-area"></div>
+  <div id="p-content"></div>
+</div>
+
+<div id="page-inventory" class="page">
+  <div class="wrap" style="padding-bottom:0;">
+    <h1>Inventory</h1>
+    <p class="subtitle">ระบบจะเตือนถ้ายาเหลือไม่ถึง 7 วัน</p>
+  </div>
+  <div id="inv-list" style="padding:0 1rem;margin-top:.5rem;"></div>
+  <div class="form-section" id="supp-form">
+    <div class="form-title" id="form-title">➕ เพิ่มอาหารเสริม</div>
+    <div class="form-group"><label class="form-label">ชื่อยา</label><input class="form-input" id="f-name" placeholder="เช่น Fish Oil 1000mg"></div>
+    <div class="form-group"><label class="form-label">หมวดหมู่</label><select class="form-select" id="f-cat"><option value="fat">🟢 Fat-soluble</option><option value="water">🔵 Water-soluble</option><option value="mineral">🟠 Mineral</option><option value="gut">🌿 Gut</option><option value="bvit">🟣 B Complex</option><option value="amino">🌸 Amino / Antioxidant</option></select></div>
+    <div class="form-group"><label class="form-label">จำนวนเม็ดคงเหลือ</label><input class="form-input" id="f-qty" type="number" placeholder="60"></div>
+    <div class="form-group"><label class="form-label">วันที่เริ่มกิน</label><input class="form-input" id="f-start" type="date"></div>
+    <div class="form-group"><label class="form-label">กินวันไหน</label><div class="form-row" id="f-days"></div></div>
+    <div class="form-group"><label class="form-label">ช่วงเวลา</label><div class="form-row" id="f-times"></div></div>
+    <div class="form-group"><label class="form-label">ระยะเวลาเห็นผล</label><select class="form-select" id="f-group"><option value="เห็นผลเร็ว">เห็นผลเร็ว (1-4 สัปดาห์)</option><option value="เห็นผลปานกลาง">ปานกลาง (1-3 เดือน)</option><option value="เห็นผลระยะยาว">ระยะยาว (3 เดือน+)</option></select></div>
+    <div class="form-group"><label class="form-label">สรรพคุณ</label><input class="form-input" id="f-note" placeholder="เช่น ผิวชุ่มชื้น ข้อต่อดี"></div>
+    <div class="form-group"><label class="form-label">ผลลัพธ์รายสัปดาห์ (สัปดาห์:ข้อความ | สัปดาห์:ข้อความ)</label><input class="form-input" id="f-ms" placeholder="4:ผิวดีขึ้น|8:ข้อไม่ตึง"></div>
+    <div class="form-group"><label class="form-label">เป้าหมายรวม (สัปดาห์)</label><input class="form-input" id="f-tw" type="number" placeholder="8"></div>
+    <div class="form-group"><label class="form-label">ข้อควรระวัง</label><input class="form-input" id="f-warn" placeholder="เช่น ห่างจาก Zinc 4-5 ชม."></div>
+    <button class="form-submit" onclick="saveSupp()">💾 บันทึก</button>
+    <button class="form-cancel hidden" id="form-cancel-btn" onclick="cancelEdit()">ยกเลิกแก้ไข</button>
+  </div>
+</div>
+
+<script>
+const CC={fat:'#1D9E75',water:'#378ADD',mineral:'#BA7517',gut:'#3B6D11',bvit:'#7F77DD',amino:'#C4377A'};
+const CL={fat:'Fat-soluble',water:'Water-soluble',mineral:'Mineral',gut:'Gut',bvit:'B Complex',amino:'Amino / Antioxidant'};
+
+const DEFAULT_SUPPS=[
+  {id:1,name:'Pro+Prebiotic',cat:'gut',qty:90,start:'2026-03-22',days:[0,1,2,3,4,5,6],times:['wake'],group:'เห็นผลเร็ว',tw:4,note:'ท้องไม่อืด ระบบย่อยสม่ำเสมอ',ms:'2:ท้องอืดลดลง|4:ระบบย่อยสม่ำเสมอ',warn:''},
+  {id:2,name:'R-ALA 100 มก.',cat:'amino',qty:60,start:'2026-04-07',days:[0,1,2,3,4,5,6],times:['wake'],group:'เห็นผลปานกลาง',tw:8,note:'ลด oxidative stress รีไซเคิล Vit C & E',ms:'4:พลังงานสม่ำเสมอขึ้น|8:ลด oxidative stress อย่างต่อเนื่อง',warn:''},
+  {id:3,name:'Fish Oil',cat:'fat',qty:90,start:'2026-03-22',days:[0,1,2,3,4,5,6],times:['morning'],group:'เห็นผลปานกลาง',tw:8,note:'ข้อไม่ตึง ลด Triglyceride ผิวชุ่มชื้น',ms:'4:ผิวชุ่มชื้นขึ้น|8:ข้อต่อไม่ตึง',warn:''},
+  {id:4,name:'Astaxanthin 6 มก.',cat:'fat',qty:60,start:'2026-03-22',days:[0,1,2,3,4,5,6],times:['morning'],group:'เห็นผลระยะยาว',tw:12,note:'ผิวยืดหยุ่น ทนแดด ลด oxidative stress',ms:'6:ผิวดูสดใสขึ้น|12:ผิวยืดหยุ่น ทนแดดดีขึ้น',warn:''},
+  {id:5,name:'CoQ10 100 มก.',cat:'fat',qty:60,start:'2026-03-22',days:[0,1,2,3,4,5,6],times:['morning'],group:'เห็นผลปานกลาง',tw:8,note:'ทนทานการทำงานนาน ไม่ล้าตอนบ่าย',ms:'4:ไม่ล้าง่าย|8:พลังงานสม่ำเสมอทั้งวัน',warn:''},
+  {id:6,name:'Lutein 25 มก. & Zeaxanthin 5 มก.',cat:'fat',qty:60,start:'2026-04-07',days:[0,1,2,3,4,5,6],times:['morning'],group:'เห็นผลระยะยาว',tw:12,note:'ปกป้องตาจากแสงสีฟ้า เพิ่ม macular pigment',ms:'6:ตาสบายขึ้นเมื่อดูจอ|12:macular pigment density เพิ่มขึ้น',warn:''},
+  {id:7,name:'Vitamin C 500 มก.',cat:'water',qty:90,start:'2026-03-22',days:[0,1,2,3,4,5,6],times:['morning'],group:'เห็นผลเร็ว',tw:4,note:'ผิวสดใส รอยดำจาง ภูมิคุ้มกันดีขึ้น',ms:'2:ผิวสดใสขึ้น|4:รอยดำเริ่มจาง',warn:''},
+  {id:8,name:'D3 5,000 IU + K2 100 มก.',cat:'fat',qty:60,start:'2026-03-22',days:[2,4,6],times:['morning'],group:'เห็นผลปานกลาง',tw:8,note:'ภูมิคุ้มกัน อารมณ์ พลังงานดีขึ้น',ms:'4:อารมณ์สม่ำเสมอ|8:ภูมิคุ้มกันแข็งแรง',warn:''},
+  {id:9,name:'B Complex (Thorne Basic B)',cat:'bvit',qty:60,start:'2026-04-02',days:[2,4,6],times:['morning'],group:'เห็นผลเร็ว',tw:4,note:'พลังงานดีขึ้น สมองใส ไม่ล้าง่าย',ms:'2:พลังงานดีขึ้น|4:สมองโฟกัสดีขึ้น',warn:''},
+  {id:10,name:'Lycopene 60 มก.',cat:'fat',qty:60,start:'2026-03-22',days:[2,4,6],times:['afternoon'],group:'เห็นผลระยะยาว',tw:12,note:'ผิวโทนสม่ำเสมอ หลอดเลือดแข็งแรง',ms:'8:ผิวโทนสม่ำเสมอ|12:ลด LDL oxidation',warn:''},
+  {id:11,name:'Zinc 15 มก. (Bisglycinate)',cat:'mineral',qty:30,start:'2026-03-22',days:[1,5],times:['afternoon'],group:'เห็นผลเร็ว',tw:4,note:'ผิวอักเสบลดลง ภูมิคุ้มกันดีขึ้น',ms:'3:ผิวอักเสบลดลง|4:ภูมิคุ้มกันตอบสนองเร็วขึ้น',warn:'ห่างจาก Magnesium อย่างน้อย 4-5 ชม.'},
+  {id:12,name:'Hyaluronic Acid 250 มก.',cat:'fat',qty:60,start:'2026-04-02',days:[0,1,2,3,4,5,6],times:['afternoon'],group:'เห็นผลปานกลาง',tw:8,note:'ผิวอิ่มขึ้น ข้อต่อหล่อลื่น',ms:'4:ผิวอิ่มขึ้น|8:ข้อต่อหล่อลื่น ลดตึง',warn:''},
+  {id:13,name:'Magnesium 200 มก.',cat:'mineral',qty:90,start:'2026-03-22',days:[0,1,2,3,4,5,6],times:['bedtime'],group:'เห็นผลเร็ว',tw:2,note:'นอนหลับลึกขึ้น กล้ามเนื้อไม่ล้า',ms:'1:เริ่มนอนหลับดีขึ้น|2:ตื่นมาสดชื่นสม่ำเสมอ',warn:''},
+  {id:14,name:'L-Theanine 200 มก.',cat:'amino',qty:60,start:'2026-04-07',days:[0,1,2,3,4,5,6],times:['bedtime'],group:'เห็นผลเร็ว',tw:2,note:'ผ่อนคลาย นอนหลับลึก สมาธิดีขึ้น',ms:'1:นอนหลับง่ายขึ้น|2:สมาธิดี ใจสงบสม่ำเสมอ',warn:''},
+];
+
+let SUPPS=JSON.parse(localStorage.getItem('supps_data2'))||null;
+if(!SUPPS){SUPPS=DEFAULT_SUPPS;localStorage.setItem('supps_data2',JSON.stringify(SUPPS));}
+let nextId=SUPPS.reduce((m,s)=>Math.max(m,s.id),0)+1;
+let editingId=null;
+let currentDay='sun';
+const DA=['sun','mon','tue','wed','thu','fri','sat'];
+const DS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const TL={wake:'หลังตื่น — ท้องว่าง',morning:'เช้า — พร้อมอาหาร (มีไขมัน)',afternoon:'บ่าย',bedtime:'ก่อนนอน'};
+const TO=['wake','morning','afternoon','bedtime'];
+const ES=new Date('2026-03-22'),TW=26;
+
+function toggleTheme(){const d=document.documentElement;d.setAttribute('data-theme',d.getAttribute('data-theme')==='dark'?'light':'dark');localStorage.setItem('supp_theme',d.getAttribute('data-theme'));}
+(function(){const t=localStorage.getItem('supp_theme');if(t)document.documentElement.setAttribute('data-theme',t);})();
+
+function switchPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('show',p.id==='page-'+id));
+  document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',['schedule','progress','inventory'][i]===id));
+  if(id==='progress')renderProgress();
+  if(id==='inventory')renderInventory();
+  window.scrollTo(0,0);
+}
+
+function hasType(type,di){return SUPPS.some(s=>s.name.toLowerCase().includes(type)&&s.days.includes(di));}
+function hasCat(cat,di){return SUPPS.some(s=>s.cat===cat&&s.days.includes(di));}
+
+function buildLeg(){
+  const u=new Set(SUPPS.map(s=>s.cat));
+  const h=[...u].map(c=>`<div class="leg"><div class="dot" style="background:${CC[c]};"></div>${CL[c]}</div>`).join('');
+  document.getElementById('legend-area').innerHTML=h;
+  document.getElementById('p-legend-area').innerHTML=[...u].map(c=>`<div class="p-leg"><div class="p-leg-dot" style="background:${CC[c]};"></div>${CL[c]}</div>`).join('');
+}
+
+function renderSchedule(){
+  const di=DA.indexOf(currentDay);
+  // tabs
+  document.getElementById('day-tabs').innerHTML=DS.map((d,i)=>{
+    let c='tab';
+    if(hasType('zinc',i))c+=' zinc-day';else if(hasType('d3',i))c+=' d3-day';
+    if(DA[i]===currentDay)c+=' active';
+    return`<button class="${c}" onclick="showDay('${DA[i]}')">${d}</button>`;
+  }).join('');
+  buildLeg();
+  const supps=SUPPS.filter(s=>s.days.includes(di));
+  // badges
+  let b='<div class="badge-row">';
+  const zd=hasType('zinc',di),dd=hasType('d3',di),bd=hasCat('bvit',di);
+  if(zd)b+=`<span class="badge" style="color:var(--zinc-t);background:var(--zinc-bg);">Zinc day</span>`;
+  if(dd)b+=`<span class="badge" style="color:var(--d3-at);background:var(--d3-bg);">D3 + Lycopene day</span>`;
+  if(bd)b+=`<span class="badge" style="color:var(--bvit-t);background:var(--bvit-bg);">B Complex day</span>`;
+  if(!zd&&!dd)b+=`<span class="badge" style="color:var(--text2);background:var(--section-bg);">วันปกติ</span>`;
+  if(!bd&&SUPPS.some(s=>s.cat==='bvit'))b+=`<span class="badge" style="color:var(--text2);background:var(--section-bg);">หยุด B Complex</span>`;
+  b+='</div>';
+  let h=b;
+  TO.forEach(t=>{
+    const items=supps.filter(s=>s.times.includes(t));if(!items.length)return;
+    let tl=TL[t];
+    if(t==='afternoon'&&zd)tl='บ่าย — พร้อมอาหารเบาๆ';
+    else if(t==='afternoon'&&dd)tl='บ่าย — พร้อมอาหาร';
+    h+=`<div class="time-block"><div class="time-header"><span class="time-label">${tl}</span><div class="time-line"></div></div><div class="pill-row">`;
+    items.forEach(s=>{
+      if(s.paused){h+=`<div class="pill-item paused"><div class="check">✓</div><span class="pill c-${s.cat}">${s.name}</span></div><div class="pause-label">⏸ พักอยู่</div>`;}
+      else{h+=`<div class="pill-item" onclick="togglePill(this,${s.id})"><div class="check">✓</div><span class="pill c-${s.cat}">${s.name}</span></div>`;}
+    });
+    h+=`</div>`;
+    items.filter(s=>s.warn).forEach(s=>{h+=`<div class="warn-box">${s.warn}</div>`;});
+    if(t==='bedtime'&&zd)h+=`<div class="note-box">ห่างจาก Zinc บ่ายอย่างน้อย 4–5 ชม. ✓</div>`;
+    h+=`</div>`;
+  });
+  document.getElementById('schedule-content').innerHTML=h;
+  restoreChecked();updateProgBar();loadDailyNote();
+}
+function showDay(id){currentDay=id;renderSchedule();}
+
+const CK='supp_'+new Date().toDateString();
+function getC(){try{return JSON.parse(localStorage.getItem(CK)||'{}')}catch(e){return{};}}
+function saveC(d){localStorage.setItem(CK,JSON.stringify(d));}
+function togglePill(el,sid){
+  const pill=el.querySelector('.pill'),chk=el.querySelector('.check');
+  const k=sid+'_'+currentDay;const c=getC();
+  if(c[k]){delete c[k];pill.classList.remove('done');chk.classList.remove('checked');const s=SUPPS.find(x=>x.id===sid);if(s)s.qty++;} 
+  else{c[k]=true;pill.classList.add('done');chk.classList.add('checked');const s=SUPPS.find(x=>x.id===sid);if(s&&s.qty>0)s.qty--;}
+  saveC(c);saveS();updateProgBar();
+}
+function restoreChecked(){
+  const c=getC();
+  document.querySelectorAll('#schedule-content .pill-item').forEach(el=>{
+    const m=el.getAttribute('onclick')?.match(/togglePill\(this,(\d+)\)/);if(!m)return;
+    if(c[m[1]+'_'+currentDay]){el.querySelector('.pill').classList.add('done');el.querySelector('.check').classList.add('checked');}
+  });
+}
+function updateProgBar(){
+  const t=document.querySelectorAll('#schedule-content .pill-item:not(.paused)').length;
+  const c=document.querySelectorAll('#schedule-content .pill-item:not(.paused) .check.checked').length;
+  const paused=document.querySelectorAll('#schedule-content .pill-item.paused').length;
+  const p=t>0?Math.round(c/t*100):0;
+  let label=`กินแล้ว ${c} จาก ${t} รายการ`;
+  if(paused>0)label+=` · พัก ${paused}`;
+  document.getElementById('prog-text').textContent=label;
+  document.getElementById('prog-pct').textContent=p+'%';
+  document.getElementById('prog-fill').style.width=p+'%';
+}
+function saveDailyNote(){localStorage.setItem('supp_note_'+new Date().toDateString(),document.getElementById('daily-note-input').value);}
+function loadDailyNote(){document.getElementById('daily-note-input').value=localStorage.getItem('supp_note_'+new Date().toDateString())||'';}
+
+function parseMs(s){if(!s)return[];return s.split('|').map(x=>{const p=x.split(':');return{w:parseInt(p[0]),t:p.slice(1).join(':')};}).filter(m=>!isNaN(m.w));}
+function fD(d){const m=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];return d.getDate()+' '+m[d.getMonth()]+' '+(d.getFullYear()+543);}
+function renderProgress(){
+  buildLeg();const now=new Date();
+  const gD=Math.max(0,Math.floor((now-ES)/864e5)),gW=Math.max(0,Math.floor((now-ES)/6048e5)),gP=Math.min(100,Math.round(gW/TW*100));
+  document.getElementById('stat-days').textContent=gD;
+  document.getElementById('stat-weeks').textContent=gW;
+  document.getElementById('stat-pct').textContent=gP+'%';
+  const gs=['เห็นผลเร็ว','เห็นผลปานกลาง','เห็นผลระยะยาว'];
+  const gN={'เห็นผลเร็ว':'เห็นผลเร็ว — 1–4 สัปดาห์','เห็นผลปานกลาง':'เห็นผลปานกลาง — 1–3 เดือน','เห็นผลระยะยาว':'เห็นผลระยะยาว — 3+ เดือน'};
+  let h='';
+  gs.forEach(g=>{
+    const items=SUPPS.filter(s=>s.group===g);if(!items.length)return;
+    h+=`<div class="p-section"><div class="p-section-label">${gN[g]}</div>`;
+    items.forEach(s=>{
+      const cc=CC[s.cat];const ss=new Date(s.start);const started=now>=ss;
+      const sW=started?Math.max(0,Math.floor((now-ss)/6048e5)):0;
+      const fill=started?Math.min(100,Math.round(sW/s.tw*100)):0;
+      const reached=started&&sW>=s.tw;
+      let badge;
+      if(reached)badge=`<span class="p-badge p-badge-done">เห็นผลแล้ว ✓</span>`;
+      else if(started&&sW>0)badge=`<span class="p-badge p-badge-going">สัปดาห์ ${sW}/${s.tw}</span>`;
+      else badge=`<span class="p-badge p-badge-soon">${started?'เพิ่งเริ่ม':'ยังไม่เริ่ม'}</span>`;
+      const sl=ss>ES?` · เริ่ม ${fD(ss)}`:'';
+      const ms=parseMs(s.ms).map(m=>{const hit=started&&sW>=m.w;return`<div class="p-ms"><div class="p-ms-dot" style="background:${hit?cc:'var(--bar-bg)'};"></div><span class="p-ms-text" style="color:${hit?'var(--text)':'var(--text3)'};">สัปดาห์ ${m.w} — ${m.t}${hit?' ✓':''}</span></div>`;}).join('');
+      h+=`<div class="p-card"><span class="cat-pill" style="background:var(--${s.cat}-bg);color:var(--${s.cat}-t);"><span style="width:6px;height:6px;border-radius:50%;background:${cc};display:inline-block;"></span>${CL[s.cat]}</span><div class="p-card-top"><span class="p-card-name">${s.name}</span>${badge}</div><div class="p-bar-labels"><span>${started?'สัปดาห์ที่ '+sW:'ยังไม่เริ่ม'}</span><span>เป้า ${s.tw} สัปดาห์${sl}</span></div><div><div class="p-bar-bg"><div class="p-bar-fill" style="width:${fill}%;background:${cc};"></div></div></div><div class="p-note">${s.note}</div>${ms}</div>`;
+    });
+    h+='</div>';
+  });
+  document.getElementById('p-content').innerHTML=h;
+}
+
+function renderInventory(){
+  const el=document.getElementById('inv-list');
+  el.innerHTML=SUPPS.map(s=>{
+    const dpw=s.days.length;const dLeft=s.qty!=null?Math.floor(s.qty/Math.max(1,s.times.length)):999;
+    const low=dLeft<7&&s.qty!=null;const paused=!!s.paused;
+    return`<div class="inv-card${paused?' inv-paused':''}"><div class="inv-color" style="background:${CC[s.cat]};"></div><div class="inv-info"><div class="inv-name">${s.name}${paused?'<span class="inv-pause-badge">พัก</span>':''}</div><div class="inv-detail">${CL[s.cat]} · ${dpw} วัน/สัปดาห์</div></div><div class="inv-qty${low&&!paused?' inv-warn':''}"><div class="inv-qty-num">${s.qty!=null?s.qty:'—'}</div><div class="inv-qty-label">${paused?'พักอยู่':low?'⚠️ เหลือน้อย':'เม็ด'}</div></div><div class="inv-btns"><button class="inv-btn" onclick="togglePause(${s.id})" title="${paused?'เริ่มกินต่อ':'พัก'}">${paused?'▶️':'⏸'}</button><button class="inv-btn" onclick="editSupp(${s.id})">✏️</button><button class="inv-btn" onclick="deleteSupp(${s.id})">🗑</button></div></div>`;
+  }).join('')||'<p style="padding:1rem;color:var(--text3);font-size:13px;">ยังไม่มีข้อมูล</p>';
+}
+
+const DL=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DC=[0,0,0,0,0,0,0].map((_,i)=>{if(hasType('zinc',i))return'fc-zinc';if(hasType('d3',i))return'fc-d3';return'';});
+const TI=[{k:'wake',l:'หลังตื่นนอน'},{k:'morning',l:'เช้า'},{k:'afternoon',l:'บ่าย'},{k:'bedtime',l:'ก่อนนอน'}];
+function initForm(){
+  // day colors based on zinc/d3 detection from current data
+  const dayColors=DA.map((_,i)=>{if(hasType('zinc',i))return'fc-zinc';if(hasType('d3',i))return'fc-d3';return'';});
+  document.getElementById('f-days').innerHTML=DL.map((d,i)=>`<button type="button" class="form-chip ${dayColors[i]}" data-day="${i}" onclick="this.classList.toggle('active')">${d}</button>`).join('')+`<button type="button" class="form-chip" style="border-style:dashed;" onclick="toggleAllDays()">All</button>`;
+  document.getElementById('f-times').innerHTML=TI.map(t=>`<button type="button" class="form-chip-time" data-time="${t.k}" onclick="this.classList.toggle('active')">${t.l}</button>`).join('');
+}
+function toggleAllDays(){const c=document.querySelectorAll('#f-days .form-chip[data-day]');const a=[...c].every(x=>x.classList.contains('active'));c.forEach(x=>x.classList.toggle('active',!a));}
+function togglePause(id){const s=SUPPS.find(x=>x.id===id);if(!s)return;s.paused=!s.paused;saveS();renderInventory();renderSchedule();}
+function resetForm(){
+  editingId=null;document.getElementById('form-title').textContent='➕ เพิ่มอาหารเสริม';
+  document.getElementById('form-cancel-btn').classList.add('hidden');
+  ['f-name','f-qty','f-start','f-note','f-ms','f-tw','f-warn'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-cat').value='fat';document.getElementById('f-group').value='เห็นผลเร็ว';
+  document.querySelectorAll('#f-days .form-chip').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('#f-times .form-chip-time').forEach(c=>c.classList.remove('active'));
+}
+function editSupp(id){
+  const s=SUPPS.find(x=>x.id===id);if(!s)return;
+  editingId=id;document.getElementById('form-title').textContent='✏️ แก้ไข: '+s.name;
+  document.getElementById('form-cancel-btn').classList.remove('hidden');
+  document.getElementById('f-name').value=s.name;document.getElementById('f-cat').value=s.cat;
+  document.getElementById('f-qty').value=s.qty||'';document.getElementById('f-start').value=s.start;
+  document.getElementById('f-group').value=s.group;document.getElementById('f-note').value=s.note||'';
+  document.getElementById('f-ms').value=s.ms||'';document.getElementById('f-tw').value=s.tw||'';
+  document.getElementById('f-warn').value=s.warn||'';
+  document.querySelectorAll('#f-days .form-chip[data-day]').forEach(c=>c.classList.toggle('active',s.days.includes(parseInt(c.dataset.day))));
+  document.querySelectorAll('#f-times .form-chip-time').forEach(c=>c.classList.toggle('active',s.times.includes(c.dataset.time)));
+  document.getElementById('supp-form').scrollIntoView({behavior:'smooth'});
+}
+function cancelEdit(){resetForm();}
+function saveSupp(){
+  const name=document.getElementById('f-name').value.trim();if(!name){alert('กรุณาใส่ชื่อยา');return;}
+  const cat=document.getElementById('f-cat').value;const qty=parseInt(document.getElementById('f-qty').value)||0;
+  const start=document.getElementById('f-start').value||'2026-03-22';const group=document.getElementById('f-group').value;
+  const note=document.getElementById('f-note').value.trim();const ms=document.getElementById('f-ms').value.trim();
+  const tw=parseInt(document.getElementById('f-tw').value)||8;const warn=document.getElementById('f-warn').value.trim();
+  const days=[...document.querySelectorAll('#f-days .form-chip.active[data-day]')].map(c=>parseInt(c.dataset.day));
+  const times=[...document.querySelectorAll('#f-times .form-chip-time.active')].map(c=>c.dataset.time);
+  if(!days.length){alert('กรุณาเลือกวันที่กิน');return;}
+  if(!times.length){alert('กรุณาเลือกช่วงเวลา');return;}
+  if(editingId){const s=SUPPS.find(x=>x.id===editingId);if(s)Object.assign(s,{name,cat,qty,start,days,times,group,note,ms,tw,warn});}
+  else SUPPS.push({id:nextId++,name,cat,qty,start,days,times,group,note,ms,tw,warn});
+  saveS();resetForm();renderInventory();renderSchedule();
+}
+function deleteSupp(id){if(!confirm('ลบรายการนี้?'))return;SUPPS=SUPPS.filter(s=>s.id!==id);saveS();renderInventory();renderSchedule();}
+function saveS(){localStorage.setItem('supps_data2',JSON.stringify(SUPPS));}
+
+initForm();currentDay=DA[new Date().getDay()];renderSchedule();
+</script>
+</body>
+</html>
